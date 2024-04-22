@@ -1,144 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Форма с чекбоксами</title>
-    <style>
-		body {
-            font-family: Arial, sans-serif;
-            text-align: left;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Тестирование</title>
+<style>
+    body, html {
+        height: 100%;
+        margin: 0;
+        font-family: Arial, sans-serif;
+    }
+    .container {
+        display: flex;
+        height: 100%;
+    }
+    .left-panel {
+        flex: 3;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    .right-panel {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        overflow: auto; /* Добавление возможности прокрутки */
+    }
+    #fld1 {
+        width: 75%;
+        height: 75%;
+        resize: none;
+    }
+    #btn_start, #btn_stop, #btn_back {
+        margin-top: 10px;
+    }
+    #popup {
+            display: none; /* Изначально скрываем окно */
+            position: fixed; /* Позиционируем относительно экрана */
+            top: 50%; /* Располагаем верхний край на 50% высоты экрана */
+            left: 50%; /* Располагаем левый край на 50% ширины экрана */
+            transform: translate(-50%, -50%); /* Центрируем окно */
             padding: 20px;
-        }
-        .popup {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            border: 1px solid #ccc;
             background-color: #fff;
-            padding: 20px;
-            width: 80%;
-            max-width: 600px;
-            max-height: 80%; /* Ограничиваем высоту всплывающего окна */
-            overflow-y: auto; /* Добавляем прокрутку, если содержимое окна не помещается */
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            z-index: 1000; /* чтобы окно всегда было поверх остального контента */
+            border: 2px solid #333;
+            border-radius: 5px;
+            z-index: 9999; /* Устанавливаем высокий уровень z-index, чтобы окно было поверх других элементов */
         }
-        .popup-content {
-            /* Стили для содержимого всплывающего окна */
-        }
-        .close {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            cursor: pointer;
-            color: #aaa;
-        }
-    </style>
+</style>
 </head>
 <body>
-    <form>
-		<label for="checkbox1"><input type="checkbox" id="checkbox1" name="option1"> товаров для личного пользования, перемещаемых в <strong>несопровождаемом багаже</strong>, или доставляемых перевозчиком; <a href="http://www.eurasiancommission.org/ru/act/trade/catr/nontariff/Pages/ediny_perechen_new.aspx" target="_blank">&#65533</a></label><br>
-        <label for="checkbox2"><input type="checkbox" id="checkbox2" name="option2"> товаров, в отношении которых подлежат соблюдению <strong>запреты и ограничения</strong>;</label><br>
-        <label for="checkbox3"><input type="checkbox" id="checkbox3" name="option3"> товаров в <strong>сопровождаемом багаже</strong>, в отношении которых подлежат уплате таможенные пошлины, налоги; <a href="https://customs.gov.ru/folder/12321" target="_blank">&#65533</a></label><br>
-        <label for="checkbox4"><input type="checkbox" id="checkbox4" name="option4"> товаров, ввозимых <strong>с освобождением от уплаты</strong> таможенных пошлин, налогов; <a href="https://customs.gov.ru/folder/160274" target="_blank">&#65533</a></label><br>
-        <label for="checkbox5"><input type="checkbox" id="checkbox5" name="option5"> <strong>транспортных средств</strong>, за исключением транспортных средств для личного пользования, зарегистрированных в государствах-членах ЕАЭС;</label><br>
-        <label for="checkbox6"><input type="checkbox" id="checkbox6" name="option6"> <strong>временно ввезенных транспортных средств</strong> для личного пользования, находящихся на таможенной территории ЕАЭС в случаях их вывоза с таможенной территории ЕАЭС, выпуска в свободное обращение до истечения срока временного ввоза и передачи временно ввезенных транспортных средств в иных случаях, чем установленные <a href="javascript:void(0);" onclick="openPopup();">пунктами 7-9 статьи 264 ТК ЕАЭС</a>;</label><br>
-        <label for="checkbox7"><input type="checkbox" id="checkbox7" name="option7"> <strong>наличных денежных инструментов</strong> в любой сумме 
-(Со 2 марта 2022 года временно запрещено вывозить валюту свыше 10 тыс. долл. США);
-</label><br>
-        <label for="checkbox8"><input type="checkbox" id="checkbox8" name="option8"> <strong>культурных ценностей</strong>;</label><br>
-		<label for="checkbox9"><input type="checkbox" id="checkbox9" name="option9"> ) товаров для личного пользования <strong>общей стоимостью 1 млн руб. и более</strong>, в том числе изделия из драгоценных металлов и камней, а также природного жемчуга; карманные и наручные часы с корпусом из драгметалла; корпуса, ремешки, ленты и браслеты для часов из драгметалла;</label><br>
-		<label for="checkbox10"><input type="checkbox" id="checkbox10" name="option10"> ) <strong>ничего из перечисленного?</strong></label><br>
-        <input type="button" value="Определить коридор" id="checkButton">
-    </form>
-    
-    <div id="myPopup" class="popup">
-        <div class="popup-content">
-            <span onclick="closePopup()" style="float: right; cursor: pointer;">&times;</span>
-            <p id="popupText">Текст вашего модального окна здесь.</p>
-        </div>
+<div class="container">
+    <div class="left-panel">
+        <textarea id="fld1" placeholder="Введите текст..."></textarea>
+        <button id="btn_start">Старт</button>
+        <button id="btn_stop" style="display: none;">Стоп</button>
+        <button id="btn_back" style="display: none;">Назад</button>
     </div>
+    <div class="right-panel">
+        <!-- Здесь будут кнопки с вариантами ответа -->
+    </div>
+</div>
+<div id="popup">
+    <p id="popupText">Поле не заполнено!</p>
+    <button onclick="closePopup()">Закрыть</button>
+</div>
 
-    <script>
-        // Функция для открытия модального окна
-        function openPopup(message = `7. Допускается передача временно ввезенных транспортных средств для личного пользования, указанных в пункте 2 статьи 264, если такие транспортные средства для личного пользования передаются:
-1) физическим лицам, которые в соответствии со статьями 298 и 299 настоящего Кодекса вправе ввозить на таможенную территорию Союза транспортные средства для личного пользования с освобождением от уплаты таможенных пошлин, налогов, - после осуществления таможенного декларирования в целях временного ввоза на таможенную территорию Союза таких транспортных средств для личного пользования физическими лицами, которым осуществляется такая передача;
-2) лицам, не указанным в подпункте 1 настоящего пункта, - после осуществления таможенного декларирования в целях свободного обращения таких транспортных средств для личного пользования физическими лицами, которым осуществляется такая передача.
-8. Без разрешения таможенного органа и без таможенного декларирования допускается передача декларантом следующих транспортных средств для личного пользования:
-1) временно ввезенное транспортное средство для личного пользования - во владение иному лицу для проведения технического обслуживания, ремонта (за исключением капитального ремонта, модернизации) и (или) для хранения;
-2) транспортное средство для личного пользования, временно ввезенное физическим лицом государства-члена, - его родителям, детям, супругу (супруге), состоящему (состоящей) в зарегистрированном браке;
-3) транспортное средство для личного пользования, временно ввезенное иностранным физическим лицом, - иным иностранным физическим лицам;
-4) временно ввезенное водное или воздушное судно для личного пользования - капитану водного судна, командиру воздушного судна, членам экипажа для управления в целях эксплуатации данного транспортного средства в случаях, когда техническое устройство судна не предполагает его эксплуатации без участия указанных лиц;
-5) транспортное средство для личного пользования, зарегистрированное на дипломатическое представительство и (или) консульское учреждение государства-члена, представительство государства-члена при международной организации, расположенное за пределами таможенной территории Союза, временно ввезенное физическим лицом государства-члена, работающим в таких дипломатическом представительстве и (или) консульском учреждении, представительстве государства-члена при международной организации, - иному сотруднику таких дипломатического представительства и (или) консульского учреждения государства-члена, представительства государства-члена при международной организации, расположенного за пределами таможенной территории Союза.
-9. С разрешения таможенного органа и без таможенного декларирования допускается передача декларантом следующих транспортных средств:
-1) транспортное средство для личного пользования, временно ввезенное иностранным физическим лицом, - физическому лицу государства-члена при условии обеспечения исполнения обязанности по уплате таможенных пошлин, налогов в соответствии со статьей 271 настоящего Кодекса;
-2) временно ввезенное транспортное средство для личного пользования - иному лицу для вывоза такого транспортного средства для личного пользования с таможенной территории Союза, если такой вывоз не может быть осуществлен декларантом по причине его смерти, тяжелой болезни или иной объективной причине.»`) {
-            document.getElementById('popupText').innerHTML = message;
-            document.getElementById('myPopup').style.display = 'block';
-        }
 
-        // Функция для закрытия модального окна
-        function closePopup() {
-            document.getElementById('myPopup').style.display = 'none';
-        }
-		
-        // Функция для проверки выбранного коридора
-        function checkCorridor() {
-            var checkboxes = document.querySelectorAll('input[type="checkbox"]');
-            var isChecked = false;
-
-            for (var i = 0; i < checkboxes.length; i++) {
-                if (checkboxes[i].checked) {
-                    isChecked = true;
-                    break;
-                }
-            }
-
-            if (!isChecked) {
-                openPopup("Пожалуйста, выберите хотя бы один пункт");
-                return;
-            }
-
-            var corridorType = getCorridorType(checkboxes);
-
-            if (corridorType === 'red') {
-                openPopup("Ваши товары подлежат декларированию. Задекларируйте товары и следуйте по «красному» коридору. Вы можете пройти таможенный контроль через <a href='https://customs.gov.ru/gosudarstvennye-informaczionnye-sis' target='_blank'>приложение</a> для заполнения пассажирской таможенной декларации.Сейчас оно работает для пользователей, авторизованных на Госуслугах. Заполните пассажирскую таможенную декларацию и покажите уникальный код таможенному инспектору при пересечении границы.(необходимо сохранить ссылку)");
-            } else if (corridorType === 'green') {
-                openPopup("Следуйте по «зеленому» коридору. Также Вы вправе задекларировать любые товары и все равно пройти по «красному» коридору для целей учета стоимостных, весовых и (или) количественных норм, в пределах которых товары для личного пользования ввозятся на таможенную территорию ЕАЭС без уплаты таможенных пошлин, налогов.»");
-            }
-        }
-
-        // Функция для определения типа коридора
-        function getCorridorType(checkboxes) {
-            for (var i = 0; i < checkboxes.length; i++) {
-                if (checkboxes[i].checked) {
-                    if (checkboxes[i].name === 'option10') {
-                        return 'green';
-                    } else {
-                        return 'red';
-                    }
-                }
-            }
-            return '';
-        }
-
-        // Добавляем обработчик события клика на кнопку
-        document.getElementById('checkButton').addEventListener('click', checkCorridor);
-		document.getElementById('checkbox10').addEventListener('change', function() {
-			if (this.checked) {
-				// Если чекбокс "ничего из перечисленного" выбран, снимаем выделение со всех остальных чекбоксов
-				var checkboxes = document.querySelectorAll('input[type="checkbox"]');
-				checkboxes.forEach(function(checkbox) {
-					if (checkbox.id !== 'checkbox10') {
-						checkbox.checked = false;
-					}
-				});
-			}
-		});
-    </script>
+<!-- Подключение скрипта -->
+<script src="script2.js"></script>
 </body>
 </html>
