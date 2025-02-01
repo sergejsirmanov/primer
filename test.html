@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geo Tracker</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        button { padding: 10px 20px; font-size: 18px; margin-top: 20px; }
+        #status { margin-top: 20px; font-size: 16px; }
+    </style>
+</head>
+<body>
+    <h1>Геолокация</h1>
+    <button id="start">Начать передачу</button>
+    <p id="status">Ожидание...</p>
+    
+    <script>
+        let watchId = null;
+        const statusEl = document.getElementById('status');
+        const button = document.getElementById('start');
+        
+        button.addEventListener('click', () => {
+            if (watchId) {
+                navigator.geolocation.clearWatch(watchId);
+                watchId = null;
+                button.textContent = 'Начать передачу';
+                statusEl.textContent = 'Ожидание...';
+            } else {
+                if (navigator.geolocation) {
+                    watchId = navigator.geolocation.watchPosition(
+                        (position) => {
+                            const { latitude, longitude } = position.coords;
+                            statusEl.textContent = `Широта: ${latitude}, Долгота: ${longitude}`;
+                        },
+                        (error) => {
+                            statusEl.textContent = `Ошибка: ${error.message}`;
+                        },
+                        { enableHighAccuracy: true, maximumAge: 0, timeout: 5000 }
+                    );
+                    button.textContent = 'Остановить передачу';
+                } else {
+                    statusEl.textContent = 'Геолокация не поддерживается';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
